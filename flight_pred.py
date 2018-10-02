@@ -8,6 +8,7 @@ Created on Mon Oct  1 16:34:53 2018
 import numpy as np
 import pandas as pd
 from sklearn import linear_model
+import matplotlib.pyplot as plt 
 
 weather_data_train = pd.read_csv('flight_predictor_data/weather_data_train.csv')
 weather_data_test = pd.read_csv('flight_predictor_data/weather_data_test.csv')
@@ -52,13 +53,24 @@ list.append('Pressure')
 list.append('Temperature')
 list.append('Wind Speed')
 list.append('Wind Direction')
-for k in range(0,5):
+
+station_list = []
+for i in range(1, 6):
+    station_list.append(i)
+    
+for k in range(0,1):
     for j in range(1,46):
+        stationdew = pd.DataFrame()
         list1 = []
         for i in range(1,6):
             list1.append('Station'+str(i)+ ' '+list[k]+' Height' + str(j))
+            stationdew['Station'+str(i)+' '+list[k]+' Height' +str(j)] = weather_data_train['Station'+str(i)+ ' '+list[k]+' Height' + str(j)]
+        plt.plot(station_list,stationdew.iloc[1],label=j)
+            
         weather_data_train['Total '+list[k]+' Height'+str(j)] = weather_data_train[list1].mean(axis=1)
-
+    plt.scatter(1,2)
+        
+    
     list2=[]        
     for i in range(1,46):
         list2.append('Total '+list[k]+' Height'+str(i))
@@ -67,6 +79,7 @@ for k in range(0,5):
 print(df.head())
 df['total_flights'] = flight_data[columns].sum(axis=1)
 df.to_csv('weather_data_train_compressed.csv', encoding='utf-8', index = False)
+
 
 
 model = linear_model.LinearRegression()
